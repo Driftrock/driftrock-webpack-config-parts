@@ -1,45 +1,17 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const merge = require('webpack-merge')
 
-const parts = require('./webpack.parts')
-
-const PATHS = {
-  app: path.join(__dirname, 'app'),
-  build: path.join(__dirname, 'build'),
-}
-
-const commonConfig = merge([
-  {
-    entry : {
-      app: PATHS.app,
-    },
-    output: {
-      path: PATHS.build,
-      filename: '[name].js',
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-        title: 'D Webpack demo'
-      }),
-    ],
+module.exports = {
+  entry: ['./src/index.js'],
+  output: {
+    filename: 'index.js',
+    path: path.join(__dirname, 'dist-modules')
   },
-  parts.lintJavaScript({include: PATHS.app}),
-])
-
-const productionConfig = merge([
-])
-
-const developmentConfig = merge([
-  parts.devServer({
-    host: process.env.HOST,
-    port: process.env.PORT,
-  })
-])
-
-module.exports = (env) => {
-  if(env === 'production')
-    return merge(commponConfig, productionConfig)
-
-  return merge(commonConfig, developmentConfig)
+  module: {
+    rules: [{
+      test: /\.js$/,
+      use: {
+        loader: 'babel-loader',
+      },
+    }]
+  },
 }
